@@ -3,24 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Marty's Website</title>
+    <title>Marty's Coffee Run</title>
     <meta
       name="description"
-      content="Marty's website: a camera-powered hand tracking coffee catching game."
+      content="Marty's Coffee Run: a camera-powered hand tracking coffee and cupcake game."
     />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="site-shell">
-      <section class="game-stage" aria-label="Marty's coffee catching game">
+      <section class="game-stage" aria-label="Marty's Coffee Run game">
         <video id="camera" autoplay playsinline muted></video>
         <canvas id="game" aria-label="Camera hand tracking game"></canvas>
 
         <div class="top-bar">
           <div>
-            <p class="eyebrow">Catch the coffees</p>
-            <h1>Marty's website</h1>
+            <p class="eyebrow">Catch coffees and cupcakes</p>
+            <h1>Marty's Coffee Run</h1>
           </div>
           <div class="score-board" aria-live="polite">
             <span>Score</span>
@@ -34,7 +34,7 @@
         </div>
 
         <div class="bottom-bar">
-          <p>Move your hands in view and catch as many coffees as you can.</p>
+          <p>Move your hands to catch white coffees for 1 point and cupcakes for 2.</p>
           <button id="resetButton" type="button" aria-label="Reset score">Reset</button>
         </div>
       </section>
