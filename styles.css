@@ -6,6 +6,7 @@
   --panel-strong: rgba(10, 13, 16, 0.88);
   --line: rgba(255, 248, 238, 0.24);
   --coffee: #d99b55;
+  --pink: #ff7fbd;
   --mint: #61d2a2;
   --coral: #ff735c;
   --shadow: rgba(0, 0, 0, 0.34);
@@ -123,10 +124,13 @@ button:active {
 
 h1 {
   margin: 4px 0 0;
+  color: var(--pink);
   font-size: clamp(2.2rem, 7vw, 6rem);
   line-height: 0.95;
   letter-spacing: 0;
-  text-shadow: 0 8px 32px rgba(0, 0, 0, 0.44);
+  text-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.44),
+    0 0 22px rgba(255, 127, 189, 0.35);
 }
 
 .score-board {
