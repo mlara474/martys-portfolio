@@ -17,11 +17,7 @@ const state = {
   detector: null,
 };
 
-const COFFEE_TYPES = [
-  { fill: "#f3eee2", sleeve: "#d99b55", lid: "#24282c" },
-  { fill: "#62d3a4", sleeve: "#fff8ee", lid: "#1b2024" },
-  { fill: "#ff735c", sleeve: "#f3eee2", lid: "#1b2024" },
-];
+const SPRINKLE_COLORS = ["#fff176", "#61d2a2", "#ff735c", "#9c7bff", "#ffffff"];
 
 function resizeCanvas() {
   const ratio = window.devicePixelRatio || 1;
@@ -39,16 +35,23 @@ function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-function spawnCoffee(now) {
-  const size = randomBetween(42, 66);
+function spawnTreat(now) {
+  const isCupcake = Math.random() < 0.28;
+  const size = isCupcake ? randomBetween(48, 70) : randomBetween(42, 64);
   state.coffees.push({
     x: randomBetween(size, window.innerWidth - size),
     y: -size,
     size,
-    speed: randomBetween(150, 245),
+    speed: randomBetween(145, 245),
     spin: randomBetween(-1.2, 1.2),
     angle: randomBetween(-0.3, 0.3),
-    type: COFFEE_TYPES[Math.floor(Math.random() * COFFEE_TYPES.length)],
+    kind: isCupcake ? "cupcake" : "coffee",
+    points: isCupcake ? 2 : 1,
+    sprinkles: Array.from({ length: 12 }, (_, index) => ({
+      x: randomBetween(-0.28, 0.28),
+      y: randomBetween(-0.28, 0.02),
+      color: SPRINKLE_COLORS[index % SPRINKLE_COLORS.length],
+    })),
     bornAt: now,
   });
 }
@@ -63,11 +66,11 @@ function drawCoffee(cup) {
   ctx.shadowBlur = 18;
   ctx.shadowOffsetY = 10;
 
-  ctx.fillStyle = cup.type.lid;
+  ctx.fillStyle = "#1b2024";
   roundRect(-s * 0.36, -s * 0.48, s * 0.72, s * 0.18, s * 0.06);
   ctx.fill();
 
-  ctx.fillStyle = cup.type.fill;
+  ctx.fillStyle = "#fffdf7";
   ctx.beginPath();
   ctx.moveTo(-s * 0.32, -s * 0.3);
   ctx.lineTo(s * 0.32, -s * 0.3);
@@ -76,14 +79,86 @@ function drawCoffee(cup) {
   ctx.closePath();
   ctx.fill();
 
-  ctx.fillStyle = cup.type.sleeve;
+  ctx.strokeStyle = "rgba(27, 32, 36, 0.24)";
+  ctx.lineWidth = Math.max(2, s * 0.04);
+  ctx.stroke();
+
+  ctx.fillStyle = "#ff7fbd";
   roundRect(-s * 0.28, -s * 0.02, s * 0.56, s * 0.22, s * 0.06);
   ctx.fill();
 
-  ctx.fillStyle = "rgba(0, 0, 0, 0.16)";
+  ctx.fillStyle = "#1b2024";
+  ctx.font = `900 ${Math.floor(s * 0.16)}px system-ui, sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("1", 0, s * 0.09);
+  ctx.restore();
+}
+
+function drawCupcake(cup) {
+  ctx.save();
+  ctx.translate(cup.x, cup.y);
+  ctx.rotate(cup.angle);
+  const s = cup.size;
+
+  ctx.shadowColor = "rgba(0, 0, 0, 0.34)";
+  ctx.shadowBlur = 18;
+  ctx.shadowOffsetY = 10;
+
+  ctx.fillStyle = "#ff7fbd";
   ctx.beginPath();
-  ctx.arc(0, s * 0.09, s * 0.06, 0, Math.PI * 2);
+  ctx.arc(0, -s * 0.08, s * 0.34, Math.PI, 0);
+  ctx.arc(s * 0.22, -s * 0.08, s * 0.22, Math.PI, 0);
+  ctx.arc(-s * 0.22, -s * 0.08, s * 0.22, Math.PI, 0);
+  ctx.lineTo(s * 0.42, s * 0.12);
+  ctx.lineTo(-s * 0.42, s * 0.12);
+  ctx.closePath();
   ctx.fill();
+
+  for (const sprinkle of cup.sprinkles) {
+    const sprinkleX = sprinkle.x * s;
+    const sprinkleY = sprinkle.y * s;
+    ctx.strokeStyle = sprinkle.color;
+    ctx.lineWidth = Math.max(2, s * 0.035);
+    ctx.beginPath();
+    ctx.moveTo(sprinkleX - s * 0.035, sprinkleY);
+    ctx.lineTo(sprinkleX + s * 0.035, sprinkleY + s * 0.025);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "#d82e4f";
+  ctx.beginPath();
+  ctx.arc(0, -s * 0.46, s * 0.11, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "#4f8a3d";
+  ctx.lineWidth = Math.max(2, s * 0.035);
+  ctx.beginPath();
+  ctx.moveTo(s * 0.04, -s * 0.55);
+  ctx.quadraticCurveTo(s * 0.16, -s * 0.64, s * 0.24, -s * 0.52);
+  ctx.stroke();
+
+  ctx.fillStyle = "#fff0b8";
+  ctx.beginPath();
+  ctx.moveTo(-s * 0.38, s * 0.06);
+  ctx.lineTo(s * 0.38, s * 0.06);
+  ctx.lineTo(s * 0.28, s * 0.5);
+  ctx.lineTo(-s * 0.28, s * 0.5);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = "rgba(163, 86, 42, 0.38)";
+  ctx.lineWidth = Math.max(1.5, s * 0.025);
+  for (let x = -0.2; x <= 0.2; x += 0.2) {
+    ctx.beginPath();
+    ctx.moveTo(s * x, s * 0.09);
+    ctx.lineTo(s * x * 0.75, s * 0.46);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "#1b2024";
+  ctx.font = `900 ${Math.floor(s * 0.16)}px system-ui, sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("2", 0, s * 0.27);
   ctx.restore();
 }
 
@@ -116,7 +191,7 @@ function updateGame(now) {
   state.lastFrameAt = now;
 
   if (now - state.lastCoffeeAt > 760) {
-    spawnCoffee(now);
+    spawnTreat(now);
     state.lastCoffeeAt = now;
   }
 
@@ -132,7 +207,7 @@ function updateGame(now) {
       const caught = Math.hypot(dx, dy) < cup.size * 0.7 + 28;
       if (caught && !cup.caught) {
         cup.caught = true;
-        state.score += 1;
+        state.score += cup.points;
         scoreEl.textContent = state.score;
       }
     }
@@ -145,7 +220,13 @@ function updateGame(now) {
 
 function drawGame() {
   drawBackdrop();
-  for (const cup of state.coffees) drawCoffee(cup);
+  for (const cup of state.coffees) {
+    if (cup.kind === "cupcake") {
+      drawCupcake(cup);
+    } else {
+      drawCoffee(cup);
+    }
+  }
   state.hands.forEach(drawHand);
 }
 
