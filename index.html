@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Marty's Website</title>
+    <meta
+      name="description"
+      content="Marty's website: a camera-powered hand tracking coffee catching game."
+    />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="site-shell">
+      <section class="game-stage" aria-label="Marty's coffee catching game">
+        <video id="camera" autoplay playsinline muted></video>
+        <canvas id="game" aria-label="Camera hand tracking game"></canvas>
+
+        <div class="top-bar">
+          <div>
+            <p class="eyebrow">Catch the coffees</p>
+            <h1>Marty's website</h1>
+          </div>
+          <div class="score-board" aria-live="polite">
+            <span>Score</span>
+            <strong id="score">0</strong>
+          </div>
+        </div>
+
+        <div class="status-panel" id="statusPanel">
+          <p id="statusText">Start the camera to play.</p>
+          <button id="startButton" type="button">Start Camera</button>
+        </div>
+
+        <div class="bottom-bar">
+          <p>Move your hands in view and catch as many coffees as you can.</p>
+          <button id="resetButton" type="button" aria-label="Reset score">Reset</button>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
